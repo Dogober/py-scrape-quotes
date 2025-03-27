@@ -18,10 +18,16 @@ QUOTE_FIELDS = [field.name for field in fields(Quote)]
 
 
 def parse_single_quote(quote: Tag) -> Quote:
-    return Quote (
+    return Quote(
         text=quote.select_one(".text").text,
         author=quote.select_one(".author").text,
-        tags=[tag.text for tag in quote.find_all(name="a", attrs={"class": "tag"})]
+        tags=[
+            tag.text
+            for tag in quote.find_all(
+                name="a",
+                attrs={"class": "tag"}
+            )
+        ]
     )
 
 
@@ -44,7 +50,12 @@ def parse_quotes() -> [Quote]:
 
 
 def main(output_csv_path: str) -> None:
-    with open(output_csv_path, "w", encoding="utf-8", newline="") as source_file:
+    with open(
+            output_csv_path,
+            "w",
+            encoding="utf-8",
+            newline=""
+    ) as source_file:
         writer = csv.writer(source_file)
         writer.writerow(QUOTE_FIELDS)
         writer.writerows([astuple(quote) for quote in parse_quotes()])
